@@ -1,9 +1,23 @@
-import ReactDOM from "react-dom/client";
-import App from "./App";
+const add = document.getElementById("add");
+const minus = document.getElementById("minus");
+const number = document.querySelector("span");
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+let count = 0;
+
+number.innerText = count;
+
+const updateText = () => {
+  number.innerText = count;
+};
+
+const handleAdd = () => {
+  count++;
+  updateText();
+};
+const handleMinus = () => {
+  count--;
+  updateText();
+};
+
+add.addEventListener("click", handleAdd);
+minus.addEventListener("click", handleMinus);
