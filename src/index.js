@@ -1,35 +1,68 @@
 import { createStore } from "redux";
 
-const add = document.getElementById("add");
-const minus = document.getElementById("minus");
-const number = document.querySelector("span");
+const form = document.querySelector("form");
+const input = document.querySelector("input");
+const ul = document.querySelector("ul");
 
-const ADD = "ADD";
-const MINUS = "MINUS";
+const ADD_TODO = "ADD_TODO";
+const DELETE_TODO = "DELETE_TODO";
 
-const reduser = (count = 0, action) => {
+const addToDo = (text) => {
+  return {
+    type: ADD_TODO,
+    text,
+    id: Date.now(),
+  };
+};
+
+const deleteToDo = (id) => {
+  return { type: DELETE_TODO, id };
+};
+
+const reducer = (state = [], action) => {
   switch (action.type) {
-    case ADD:
-      return count + 1;
-    case MINUS:
-      return count - 1;
+    case ADD_TODO:
+      return [{ text: action.text, id: action.id }, ...state];
+    case DELETE_TODO:
+      return state.filter((toDo) => toDo.id !== action.id);
     default:
-      return count;
+      return state;
   }
 };
 
-const countStore = createStore(reduser);
+const store = createStore(reducer);
 
-const onChange = () => (number.innerText = countStore.getState());
-
-countStore.subscribe(onChange);
-
-const handleAdd = () => {
-  countStore.dispatch({ type: ADD });
-};
-const handleMinus = () => {
-  countStore.dispatch({ type: MINUS });
+const dispatchAddToDo = (text) => {
+  store.dispatch(addToDo(text));
 };
 
-add.addEventListener("click", handleAdd);
-minus.addEventListener("click", handleMinus);
+const dispatchDeleteToDo = (event) => {
+  const id = parseInt(event.target.parentNode.id);
+  store.dispatch(deleteToDo(id));
+};
+
+const paintToDos = () => {
+  const toDos = store.getState();
+  ul.innerHTML = "";
+  toDos.forEach((toDo) => {
+    const li = document.createElement("li");
+    const btn = document.createElement("button");
+    btn.innerText = "❌";
+    btn.addEventListener("click", dispatchDeleteToDo);
+    li.id = toDo.id;
+    li.innerText = toDo.text;
+    ul.appendChild(li);
+    li.appendChild(btn);
+  });
+};
+
+store.subscribe(paintToDos);
+
+const onSubmit = (e) => {
+  e.preventDefault();
+  const toDo = input.value;
+  input.value = "";
+  dispatchAddToDo(toDo);
+};
+
+form.addEventListener("submit", onSubmit);
