@@ -9,9 +9,10 @@ function Home({ toDos, addToDo }) {
     setText(event.target.value);
   };
   const onSubmit = (event) => {
+    const id = Date.now();
     event.preventDefault();
     setText("");
-    addToDo(text);
+    addToDo(text, id);
   };
 
   return (
@@ -37,7 +38,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    addToDo: (text) => dispatch(actionCreators.addToDo(text)),
+    addToDo: (text, id) => dispatch(actionCreators.addToDo({ text, id })),
   };
 }
 
