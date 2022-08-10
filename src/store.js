@@ -3,6 +3,10 @@ import { createStore } from "redux";
 const ADD = "ADD";
 const DELETE = "DELETE";
 
+if (!localStorage.getItem("toDos")) {
+  window.localStorage.setItem("toDos", JSON.stringify([]));
+}
+
 const addToDo = (text) => {
   return {
     type: ADD,
@@ -15,12 +19,18 @@ const deleteToDo = (id) => {
   return { type: DELETE, id: parseInt(id) };
 };
 
-const reducer = (state = [], action) => {
+const initState = JSON.parse(localStorage.getItem("toDos"));
+
+const reducer = (state = initState, action) => {
   switch (action.type) {
     case ADD:
-      return [{ text: action.text, id: action.id }, ...state];
+      const addToDo = [{ text: action.text, id: action.id }, ...state];
+      localStorage.setItem("toDos", JSON.stringify(addToDo));
+      return addToDo;
     case DELETE:
-      return state.filter((toDo) => toDo.id !== action.id);
+      const delToDo = state.filter((toDo) => toDo.id !== action.id);
+      localStorage.setItem("toDos", JSON.stringify(delToDo));
+      return delToDo;
     default:
       return state;
   }
