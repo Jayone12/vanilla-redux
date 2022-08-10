@@ -1,17 +1,20 @@
 import { useState } from "react";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ToDo from "../components/ToDo";
-import { actionCreators } from "../store";
+import { addToDo } from "../store";
 
-function Home({ toDos, addToDo }) {
+function Home() {
   const [text, setText] = useState("");
+  const toDos = useSelector((state) => state);
+  const dispatch = useDispatch();
+  console.log(toDos);
   const onChange = (event) => {
     setText(event.target.value);
   };
   const onSubmit = (event) => {
     event.preventDefault();
     setText("");
-    addToDo(text);
+    dispatch(addToDo(text));
   };
 
   return (
@@ -31,14 +34,14 @@ function Home({ toDos, addToDo }) {
 }
 
 // redux state로 부터 home component에 props로 전달한다.
-function mapStateToProps(state) {
-  return { toDos: state };
-}
+// function mapStateToProps(state) {
+//   return { toDos: state };
+// }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    addToDo: (text) => dispatch(actionCreators.addToDo(text)),
-  };
-}
+// function mapDispatchToProps(dispatch) {
+//   return {
+//     addToDo: (text) => dispatch(actionCreators.addToDo(text)),
+//   };
+// }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default Home;

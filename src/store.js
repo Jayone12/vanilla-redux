@@ -7,7 +7,7 @@ if (!localStorage.getItem("toDos")) {
   window.localStorage.setItem("toDos", JSON.stringify([]));
 }
 
-const addToDo = (text) => {
+export const addToDo = (text) => {
   return {
     type: ADD,
     text,
@@ -15,7 +15,7 @@ const addToDo = (text) => {
   };
 };
 
-const deleteToDo = (id) => {
+export const deleteToDo = (id) => {
   return { type: DELETE, id: parseInt(id) };
 };
 
@@ -36,10 +36,5 @@ const reducer = (state = initState, action) => {
   }
 };
 const store = createStore(reducer);
-
-export const actionCreators = {
-  addToDo,
-  deleteToDo,
-};
 
 export default store;
